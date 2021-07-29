@@ -1,0 +1,1 @@
+{"app": {"bg": "\"COLOR\" OR \"IMAGE\"", "bginfo": "white", "fullscreen": false, "icon": "ICO_OR_PNG_IMAGE", "istool": false, "title": "hello", "topmost": false, "transparency": 1, "windowsize": "100x300"}}
