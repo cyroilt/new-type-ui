@@ -3,8 +3,24 @@ from .modules import button  as _bt
 from .modules import canvas  as _canv
 from .modules import physics as _ph
 from .modules import saver  as _save
+from .modules import console as _cmd
 from time import sleep
-
+class console():
+  def colorize(*w,**kw):
+    return _cmd.format(*w,**kw)
+  def color_line(*w,**kw):
+    return _cmd.format_line(*w,**kw)
+  def clear_all():
+    _cmd.clear_all()
+  def clear_line():
+    _cmd.clear_line()
+  class progressbar():
+    def __init__(self,*w,**kw):
+      self.pro=_cmd.progressbar(*w,**kw)
+    def update(self,percent):
+      self.pro.update(percent)
+  def load_image(img,descent=(1,1)):
+    _cmd.image_opener(img,descent=(1,1))
 class app():
   def __init__(self,**dt):
     self._app=_app.app(**dt)
@@ -39,6 +55,8 @@ class button():
     self._bt._kill()
   def refunc(self,func):
     self._bt.refunc(func)
+  def restyle(self,**nn):
+    self._bt.restyle(**nn)
 class canvas():
   def __init__(self,*ar,**kw):
     self._canv=_canv.canvas(*ar,**kw)
@@ -46,6 +64,8 @@ class canvas():
     return self._canv.get_win()
   def get_c(self):
     return self._canv.get_c()
+  def bind(self,*dt,**dt2):
+    self._canv.bind(*dt,**dt2)
 class rectangle():
   def __init__(self,*ar,**kw):
     self._rec=_canv.rectangle(*ar,**kw)
@@ -73,6 +93,8 @@ class rectangle():
     self._rec.group(*el)
   def ungroup(self):
     self._rec.group()
+  def colorize(self,*d,**dd):
+    self._rec.colorize(*d,**dd)
 class oval():
   def __init__(self,*ar,**kw):
     self._ov=_canv.oval(*ar,**kw)
@@ -194,3 +216,10 @@ class line():
     self._ln.group(*el)
   def ungroup(self):
     self._ln.group()
+class electricy():
+  def __init__(self,*info,**subinfo):
+    self._electr=_ph.electricy(*info,**subinfo)
+  def get_ro(self):
+    return self._electr.get_ro()
+  def change_wire(self,**mmm):
+    self._electr.change_wire(**mmm)

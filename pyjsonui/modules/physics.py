@@ -1,5 +1,5 @@
 from math import sin,cos,sqrt
-materials=['platinum', 'silver', 'iron', 'copper', 'aluminium','gold']
+materials=['platinum', 'silver', 'iron', 'copper', 'aluminum','gold']
 materials_ro=[0.107,0.015,0.09,0.017,0.026,0.023]
 class gravitation():
   def __init__(self,g=9.8,k=0.5):
@@ -32,5 +32,9 @@ class gravitation():
 class electricy():
   def __init__(self,input_U,material='copper'):
     self.Ustart=input_U
+    self.ro_cable=materials_ro[materials.index(material)]
+  def get_ro(self):
+    return self.ro_cable
+  def change_wire(self,material='copper'):
     self.ro_cable=materials_ro[materials.index(material)]
     

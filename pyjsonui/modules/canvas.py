@@ -147,23 +147,39 @@ class rectangle():
       i.move_to(x=x,y=y,artefacts=artefacts)
   def hide(self):
     self.path=ImageTk.PhotoImage(Image.new("RGBA",(100,100)),master=self.w)
+    self.c.delete(self.rec)
     self.rec=self.c.create_image((self.x1-self.x)//2,(self.y1-self.y)//2,image=self.path)
     self.update()
     for i in self.grouped:
       i.hide()
-  def show(self):
-    self.path=ImageTk.PhotoImage(self.imag,master=self.w)
-    self.rec=self.c.create_image((self.x1-self.x)//2,(self.y1-self.y)//2,image=self.path)
-    self.scale(x=self.scalex,y=self.scaley)
-    self.rotate(self.angle)
-    self.update()
+  def show(self,image=None):
+    if image==None:
+      self.path=ImageTk.PhotoImage(self.imag,master=self.w)
+      self.c.delete(self.rec)
+      self.rec=self.c.create_image(self.x+(self.x1-self.x)//2,self.y+(self.y1-self.y)//2,image=self.path)
+      self.scale(x=self.scalex,y=self.scaley)
+      self.rotate(self.angle)
+      self.update()
+    else:
+      self.imag=image
+      self.path=ImageTk.PhotoImage(self.imag,master=self.w)
+      self.c.delete(self.rec)
+      self.rec=self.c.create_image(self.x+(self.x1-self.x)//2,self.y+(self.y1-self.y)//2,image=self.path)
+      self.scale(x=self.scalex,y=self.scaley)
+      self.rotate(self.angle)
+      self.update()
     for i in self.grouped:
-      i.show()
+        i.show()
   def group(self,*obj):#you should call mother element
     for i in range(len(obj)):
       self.grouped.append(obj[i])
   def ungroup(self,*obj):
     self.grouped=[]
+  def colorize(self,color=None,line='black',width=2):
+    self.im=rectangle(self.ca,self.x0,self.y0,self.x01,self.y01,fill=color,line=line,width=width)
+    self.im.hide()
+    self.show(image=self.im.imag)
+    self.update()
 class oval():
   def __init__(self,c,x,y,x1,y1,fill=None,line='black',width=2):
     self.c=c.get_c()
@@ -264,6 +280,7 @@ class oval():
       self.grouped.append(obj[i])
   def ungroup(self,*obj):
     self.grouped=[]
+  
 class rounded_rectangle():
   def __init__(self,c,x,y,x1,y1,fill=None,line='black',width=2,radius=2):
     self.c=c.get_c()

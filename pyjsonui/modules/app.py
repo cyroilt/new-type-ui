@@ -3,6 +3,7 @@ from PIL import Image,ImageTk,ImageSequence
 from functools import partial
 from json import *
 from . import button
+from . import console
 import time
 from threading import Thread
 names=[]
@@ -21,6 +22,17 @@ rules={'M-Left':'<Button-1>',
 'Enter':'<Return>',
 'In':'<Enter>',
 'Out':'<Leave>'}
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+    ADD_UNDERLINE=';4m'
 images=0
 class app():
   def generate_gradient(self,c1='', c2='', w=0, h=0):
@@ -64,8 +76,9 @@ class app():
         mybg.update()
       for i in mybg.find_all():
         mybg.delete(i)
-  def __init__(self,windowsize='100x100',title='pyuijson',icon='ICO_OR_PNG_IMAGE',transparency=1,fullscreen=False,istool=False,topmost=False,bg='"COLOR" OR "IMAGE" OR "GRADIENT"',bginfo="white",onclosefunc=None):
+  def __init__(self,windowsize='100x100',place='0x0',title='pyuijson',icon='ICO_OR_PNG_IMAGE',transparency=1,fullscreen=False,istool=False,topmost=False,bg='"COLOR" OR "IMAGE" OR "GRADIENT"',bginfo="white",onclosefunc=None):
         global names,paths,images
+        xplace,yplace=place.split('x')
         self.window=Tk()
         self.looped=onclosefunc
         def on_closing():
@@ -103,29 +116,37 @@ class app():
         x,y=windowsize.split('x')
         x,y=int(x),int(y)
         self.lx,self.ly=x,y
-        self.window.geometry(windowsize)
+        self.window.geometry(windowsize+'+'+xplace+'+'+yplace)
         try:
           self.window.call("wm", "attributes", ".", "-alpha", str(transparency/100))
         except:
-          print("your system doesn't support transparency method")
+          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING + "your system doesn't support transparency method"+bcolors.ENDC )
         try:
           self.window.call("wm", "attributes", ".", "-fullscreen", fullscreen)
         except:
-          print("your system doesn't support fullscreen method")
+          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support fullscreen method"+bcolors.ENDC)
         try:
           self.window.call("wm", "attributes", ".", "-toolwindow", istool)
         except:
-          print("your system doesn't support tool window method")
+          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support tool window method"+bcolors.ENDC)
         try:
           self.window.call("wm", "attributes", ".", "-topmost", topmost)
         except:
-          print("your system doesn't support topmost method")
+          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support topmost method"+bcolors.ENDC)
         bg=bg.upper()
         im=0
         if bg=='"COLOR" OR "IMAGE" OR "GRADIENT"' or bg=='COLOR':
-          self.mybackground=Canvas(self.window,bg=bginfo,height=windowsize.split('x')[1],width=windowsize.split('x')[0])
-          self.mybackground.pack()
-          self.mybackground.place(x=0,y=0)
+          try:
+            self.mybackground=Canvas(self.window,bg=bginfo,height=windowsize.split('x')[1],width=windowsize.split('x')[0])
+            self.mybackground.pack()
+            self.mybackground.place(x=0,y=0)
+          except:
+            print(bcolors.OKCYAN+'[App error] '+bcolors.ENDC+bcolors.FAIL+'No color:'+bcolors.ENDC+' '+bcolors.UNDERLINE+' '+str(bginfo)+bcolors.ENDC)
+  
+            self.mybackground=Canvas(self.window,bg='white',height=windowsize.split('x')[1],width=windowsize.split('x')[0])
+            self.mybackground.pack()
+            self.mybackground.place(x=0,y=0)
+
         elif bg=='GRADIENT':
           self.mybackground=Canvas(self.window,height=windowsize.split('x')[1]*3,width=windowsize.split('x')[0])
           self.mybackground.pack()
@@ -259,37 +280,9 @@ class app():
         else:
               paths.append('icon.png')
               names.append(PhotoImage(file='icon.png'))
-        if icon!='ICO_OR_PNG_IMAGE':
-            if icon in paths:
-              myicon=names[paths.index(icon)]
-            else:
-              paths.append(icon)
-              names.append(PhotoImage(file=icon))
-              myicon=names[paths.index(icon)]
-            window.call('wm', 'iconphoto', window._w, myicon)
-        else:
-            imgpyuijson=names[0]
-            window.call('wm', 'iconphoto', window._w, imgpyuijson)
-        window.title(title)
-        window.geometry(windowsize)
-        try:
-          window.call("wm", "attributes", ".", "-alpha", str(transparency))
-        except:
-          print("your system doesn't support transparency method")
-        try:
-          window.call("wm", "attributes", ".", "-fullscreen", fullscreen)
-        except:
-          print("your system doesn't support fullscreen method")
-        try:
-          window.call("wm", "attributes", ".", "-toolwindow", istool)
-        except:
-          print("your system doesn't support tool window method")
-        try:
-          window.call("wm", "attributes", ".", "-topmost", topmost)
-        except:
-          print("your system doesn't support topmost method")
         bg=bg.upper()
         im=0
+        self.window.title(title)
         if bg=='"COLOR" OR "IMAGE"' or bg=='COLOR':
           mybackground=Canvas(window,bg=bginfo,height=windowsize.split('x')[1],width=windowsize.split('x')[0])
           mybackground.pack()
@@ -314,7 +307,7 @@ class app():
         self.title,self.icon,self.transparency,self.fullscreen,self.istool,self.topmost,self.windowsize=title,icon,transparency,fullscreen,istool,topmost,windowsize
   def kill(self,afterdeathfunc=None):
     self.window.destroy()
-    print('window destroyed')
+    print(bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING+'window destroyed'+bcolors.ENDC)
     if afterdeathfunc!=None:
       afterdeathfunc()
 

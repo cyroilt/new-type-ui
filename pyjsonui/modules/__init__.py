@@ -3,4 +3,5 @@ from . import button
 from . import canvas
 from . import physics
 from . import saver
-__all__=['app','button','canvas','physics','saver']
+from . import console
+__all__=['app','button','canvas','physics','saver','console']
