@@ -1,5 +1,6 @@
-![](/icon.png)
-# version 0.1 #
+
+!['PYUIJSON'](icon.png 'PYUIJSON')
+# version 0.1 # 
 - ##  added `app` module ##
 - ## added ` main ` module ##
 # version 0.2 #
