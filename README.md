@@ -59,7 +59,8 @@ example:
 - - ## app.kill()-destroys an app window
 ***
 - ## button(app,size='50x25',place=None,text='',image=None,function=None,withoutput=False,animation=None,switcher=None,autoresize=False,onreleasef=None,onreleasout=False,bg='#004DFF') - creates a button on `app` window
-
+- - at that moment released 'lighter' animation
+- - ### refunc(function) 
 
 
 
