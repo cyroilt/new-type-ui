@@ -4,8 +4,10 @@ from .modules import canvas  as _canv
 from .modules import physics as _ph
 from .modules import saver  as _save
 from .modules import console as _cmd
+from .modules import err as _ee
+from threading import Thread
 from time import sleep
-class console():
+class console(): 
   def colorize(*w,**kw):
     return _cmd.format(*w,**kw)
   def color_line(*w,**kw):
@@ -14,21 +16,41 @@ class console():
     _cmd.clear_all()
   def clear_line():
     _cmd.clear_line()
+  def get_size():
+    return _cmd.screen_size()
   class progressbar():
     def __init__(self,*w,**kw):
       self.pro=_cmd.progressbar(*w,**kw)
     def update(self,percent):
       self.pro.update(percent)
-  def load_image(img,descent=(1,1)):
-    _cmd.image_opener(img,descent=(1,1))
+  def load_image(img,descend=(1,1)):
+    _cmd.image_opener(img,descend=descend)
+  def bind(button,function=None,nooutput=True):
+    _cmd.bind(button,function=function,nooutput=function)
+def catcher():
+  a=Thread(target=_ee.error_catcher)
+  a.start()
 class app():
+  """
+  app class is a base for your app
+  this class have arguments:
+  windowsize='100x100',place='0x0',title='pyuijson',icon='ICO_OR_PNG_IMAGE',transparency=1,fullscreen=False,istool=False,topmost=False,bg='"COLOR" OR "IMAGE" OR "GRADIENT"',bginfo="white",onclosefunc=None"""
   def __init__(self,**dt):
     self._app=_app.app(**dt)
   def loop(self):
+    '''
+    run an window loop
+    '''
     self._app.loop()
   def kill(self):
+    '''
+    destroy an app
+    '''
     self._app.kill()
   def configure(self,**dt):
+    '''
+    update an app arguments with **dt watch an arguments higher
+    '''
     self._app.configure(**dt)
   def bind(self,*dt,**dt2):
     self._app.bind(*dt,**dt2)
@@ -38,8 +60,8 @@ class app():
     return self._app._get_type()
   def _mw(self):
     return self._app._mw() 
-def save(self,filename='auto'):
-    return _save.save(self,filename=filename)
+def save(*sel,filename='auto'):
+    return _save.save(*sel,filename=filename)
 def load(filename):
     dt=_save._load(filename)
     for i in dt.keys():
@@ -57,6 +79,10 @@ class button():
     self._bt.refunc(func)
   def restyle(self,**nn):
     self._bt.restyle(**nn)
+  def _get(self):
+    return self._bt._get()
+  def _get_type(self):
+    return self._bt._get_type()
 class canvas():
   def __init__(self,*ar,**kw):
     self._canv=_canv.canvas(*ar,**kw)
