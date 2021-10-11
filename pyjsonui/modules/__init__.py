@@ -4,4 +4,5 @@ from . import canvas
 from . import physics
 from . import saver
 from . import console
-__all__=['app','button','canvas','physics','saver','console']
+from . import err
+__all__=['app','button','canvas','physics','saver','console','err']

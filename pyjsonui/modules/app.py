@@ -6,6 +6,7 @@ from . import button
 from . import console
 import time
 from threading import Thread
+
 names=[]
 paths=[]
 rules={'M-Left':'<Button-1>',
@@ -80,6 +81,7 @@ class app():
         global names,paths,images
         xplace,yplace=place.split('x')
         self.window=Tk()
+        
         self.looped=onclosefunc
         def on_closing():
           if self.looped!=None:
@@ -120,19 +122,19 @@ class app():
         try:
           self.window.call("wm", "attributes", ".", "-alpha", str(transparency/100))
         except:
-          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING + "your system doesn't support transparency method"+bcolors.ENDC )
+          print(console.format("your system doesn't support transparency method",category='Warning') )
         try:
           self.window.call("wm", "attributes", ".", "-fullscreen", fullscreen)
         except:
-          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support fullscreen method"+bcolors.ENDC)
+          print(console.format("your system doesn't support fullscreen method",category='Warning'))
         try:
           self.window.call("wm", "attributes", ".", "-toolwindow", istool)
         except:
-          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support tool window method"+bcolors.ENDC)
+          print(console.format("your system doesn't support tool window method",category='Warning'))
         try:
           self.window.call("wm", "attributes", ".", "-topmost", topmost)
         except:
-          print(bcolors.HEADER+bcolors.OKBLUE+'[Info] '+bcolors.ENDC+bcolors.WARNING +"your system doesn't support topmost method"+bcolors.ENDC)
+          print(console.format("your system doesn't support topmost method",category='Warning'))
         bg=bg.upper()
         im=0
         if bg=='"COLOR" OR "IMAGE" OR "GRADIENT"' or bg=='COLOR':

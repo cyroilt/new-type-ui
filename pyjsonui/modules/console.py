@@ -1,6 +1,9 @@
 import os
 import sys 
 import difflib
+from curses import *
+from threading import Thread
+bindings={}
 def divide(input, n=2):
     size=n
     input_size = len(input)
@@ -121,33 +124,34 @@ def clear_line():
     sys.stdout.write("\033[F") #back to previous line 
     sys.stdout.write("\033[K") #clear line 
 class progressbar():
-  def __init__(self,percent,color='green',withpercents=True,width=1,wheel=True,startwheelpos=0):
-    self.symbols={10:'█',5:'▌',-1:'░'}
+  def __init__(self,percent,color='green',withpercents=True,width=1,wheel=True,startwheelpos=0,types=1):
+    self.symbols={10:'█',5:'▍',-1:' ░',-2:'▒',-3:'▓',-4:' '}
     self.wheelpos=[" \ ",' | ',' / ',' — ']
     self.wheelposn=startwheelpos
     self.wheel=wheel
     self.width=width
     self.percent=percent
     self.color=color
+    self.type=types
     self.wheelwid=''
     self.withpercents=withpercents
     if wheel==True:
       self.wheelwid=self.wheelpos[self.wheelposn]
     if (percent*width)%10>=5:
-      self.text=(percent*width)//10*self.symbols[10]+self.symbols[5]+(100*width-(percent*width))//10*self.symbols[-1]
+      self.text=(int(percent)*width)//10*self.symbols[10]+self.symbols[5]+(100*width-(int(percent)*width))//10*self.symbols[-1*types]
     else:
-      self.text=(percent*width)//10*self.symbols[10]+(100*width-(percent*width))//10*self.symbols[-1]
+      self.text=(int(percent)*width)//10*self.symbols[10]+(100*width-(int(percent)*width))//10*self.symbols[-1*types]
     if withpercents==False:
      print(format(self.text+self.wheelwid+' ',color=color))
     else:
-      print(format(self.text+self.wheelwid+' ',color=color)+format(str(percent)+'%',color=color,style='italic'))
+      print(format(self.text+self.wheelwid+' ',color=color)+format(str(round(percent,1))+'%',color=color,style='italic'))
   def update(self,percent):
      clear_line()
      if self.wheelposn<3:
       self.wheelposn+=1
      else:
        self.wheelposn=0
-     progressbar(percent,color=self.color,withpercents=self.withpercents,width=self.width,wheel=self.wheel,startwheelpos=self.wheelposn)
+     progressbar(percent,color=self.color,withpercents=self.withpercents,width=self.width,wheel=self.wheel,startwheelpos=self.wheelposn,types=self.type)
 
 def similar(arr):
     s = difflib.SequenceMatcher()
@@ -184,4 +188,26 @@ def image_opener(image,descend=(1,1)):
   except:
     print(format("Can't open the image "+image+'. Did you meant '+meant(image)+' ?',category='Error'))
     image_opener(meant(image),descend=descend)
-  
+def screen_size():  
+  import curses #number of rows and columns
+
+  screen = curses.initscr()
+  rows, cols = screen.getmaxyx()
+  curses.endwin()
+  return rows,cols
+def bind(button,function=None,nooutput=True):
+  global bindings
+  def curser(button,function,nooutput):
+    stdscr = initscr()
+    if nooutput==True:
+      noecho() 
+    else:
+      pass
+    while True:
+      c = stdscr.getch()
+      if c == ord(button):
+         if function!=None:
+           function()
+  process=Thread(target=curser,args=(button,function,nooutput))
+  process.start()
+  bindings[button]=(function,process,nooutput) 

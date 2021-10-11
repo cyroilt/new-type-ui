@@ -81,3 +81,7 @@ class button():
     self.enh = ImageEnhance.Brightness(self.image)
     self.bg=self.obj.create_image(self.image.size[0]//2,self.image.size[1]//2,image=self.tkim)
     self.obj.update()
+  def _get(self):
+    return self.bg,self.size,self.place,self.text,self.image,self.animation
+  def _get_type(self):
+    return 'button'
